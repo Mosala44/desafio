@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Contacto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 { text-align: center; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .error { color: red; font-size: 0.9em; margin-top: 4px; }
+    .success {
+      background: #e6ffed;
+      border: 1px solid #2aa65b;
+      padding: 10px;
+      border-radius: 6px;
+      color: #0a5a2a;
+      margin-bottom: 15px;
+      display: none;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <h1>Contáctanos</h1>
+
+  <div id="alert-success" class="success"></div>
+
+  <form id="contactForm" novalidate>
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" name="nombre">
+      <div class="error" id="error-nombre"></div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email">
+      <div class="error" id="error-email"></div>
+    </div>
+    <div class="form-group">
+      <label for="mensaje">Mensaje</label>
+      <textarea id="mensaje" name="mensaje" rows="5"></textarea>
+      <div class="error" id="error-mensaje"></div>
+    </div>
+    <button type="submit" id="submitBtn">Enviar</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const successBox = document.getElementById("alert-success");
+    const errors = {
+      nombre: document.getElementById("error-nombre"),
+      email: document.getElementById("error-email"),
+      mensaje: document.getElementById("error-mensaje"),
+    };
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      clearErrors();
+      successBox.style.display = "none";
+
+      const nombre = document.getElementById("nombre").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const mensaje = document.getElementById("mensaje").value.trim();
+
+      let valid = true;
+
+      if (!nombre) {
+        errors.nombre.textContent = "El nombre es obligatorio.";
+        valid = false;
+      }
+      if (!email) {
+        errors.email.textContent = "El email es obligatorio.";
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errors.email.textContent = "El email no es válido.";
+        valid = false;
+      }
+      if (!mensaje) {
+        errors.mensaje.textContent = "El mensaje es obligatorio.";
+        valid = false;
+      } else if (mensaje.length < 5) {
+        errors.mensaje.textContent = "El mensaje debe tener al menos 5 caracteres.";
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Simulamos "envío" con un delay
+      document.getElementById("submitBtn").disabled = true;
+      setTimeout(() => {
+        successBox.textContent = "Tu mensaje fue enviado correctamente. ¡Gracias!";
+        successBox.style.display = "block";
+        form.reset();
+        document.getElementById("submitBtn").disabled = false;
+      }, 1000);
+    });
+
+    function clearErrors() {
+      Object.values(errors).forEach(err => err.textContent = "");
+    }
+  </script>
+
+</body>
+</html>
